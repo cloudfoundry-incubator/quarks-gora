@@ -34,7 +34,8 @@ func Test(t *testing.T) {
 	}{
 		{name: "1: testing get", r: newreq("GET", ts.URL+"/", nil), contains: "FOO=BAR", status: 200},
 		{name: "2: testing post", r: newreq("POST", ts.URL+"/", strings.NewReader("exit 0")), contains: "OK", status: 200},
-		{name: "2: testing post (error)", r: newreq("POST", ts.URL+"/", strings.NewReader("exit 1")), contains: "failed executing", status: 500},
+		{name: "3: testing post (error)", r: newreq("POST", ts.URL+"/", strings.NewReader("exit 1")), contains: "failed executing", status: 500},
+		{name: "4: testing post (error) that shows error message", r: newreq("POST", ts.URL+"/", strings.NewReader("echo 'foofail' && exit 1")), contains: "foofail", status: 500},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {

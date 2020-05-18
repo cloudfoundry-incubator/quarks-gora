@@ -45,8 +45,8 @@ func Gora(w http.ResponseWriter, req *http.Request) {
 		command := string(data)
 		cmd := exec.Command("/bin/bash", "-c", command)
 
-		if err := cmd.Run(); err != nil {
-			http.Error(w, fmt.Sprintf("500 - failed executing: %s", command), http.StatusInternalServerError)
+		if out, err := cmd.CombinedOutput(); err != nil {
+			http.Error(w, fmt.Sprintf("500 - failed executing: %s\n error: %s", command, string(out)), http.StatusInternalServerError)
 		} else {
 			w.Write([]byte("OK"))
 		}
