@@ -9,7 +9,7 @@ As a BOSH release it should be used as one package in one job. It can also be us
 - http server with ssl
 - accepts the following:
   - GET / (returns env)
-  - POST / (runs the request body in bash and returns a 200 for exit code 0, 500 otherwist, STOUD/ERR in response body)
+  - POST / (runs the request body in bash and returns a 200 for exit code 0, 500 otherwise, STDOUD/ERR in response body)
 
 ## Run
 
