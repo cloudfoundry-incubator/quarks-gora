@@ -16,4 +16,4 @@ server.key:
 
 run: server.crt server.key
 	@echo "Running on port 4443"
-	SERVER_KEY=server.key SERVER_CRT=server.crt PORT=4443 go run ./main.go
+	SSL=true SERVER_KEY=server.key SERVER_CRT=server.crt PORT=4443 go run ./main.go
