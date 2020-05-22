@@ -18,3 +18,8 @@ jobs:
       run: make test
     - name: Build
       run: make build
+    - name: Smoke
+      run: |
+            make run &
+            sleep 5
+            make smoke-test
