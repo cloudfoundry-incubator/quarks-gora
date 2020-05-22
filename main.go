@@ -16,6 +16,8 @@ var (
 	ServerCert = os.Getenv("SERVER_CRT")
 	// Port is the port where the https server is listening to
 	Port = os.Getenv("PORT")
+	// SSL tells gora to listen for encrypted connections
+	SSL = os.Getenv("SSL") == "true"
 )
 
 // Gora is the main handler of the Gora app.
@@ -25,6 +27,7 @@ var (
 func Gora(w http.ResponseWriter, req *http.Request) {
 	switch req.Method {
 	case "GET":
+		log.Println("Handling GET request. Returning environment variables")
 		var env []byte
 		w.Header().Set("Content-Type", "text/plain")
 
@@ -43,6 +46,8 @@ func Gora(w http.ResponseWriter, req *http.Request) {
 			http.Error(w, "failed parsing body", http.StatusInternalServerError)
 		}
 		command := string(data)
+
+		log.Printf("Handling POST request. Executing '%s'\n", command)
 		cmd := exec.Command("/bin/bash", "-c", command)
 
 		if out, err := cmd.CombinedOutput(); err != nil {
@@ -55,7 +60,7 @@ func Gora(w http.ResponseWriter, req *http.Request) {
 	}
 }
 
-func main() {
+func sslGora() {
 	if ServerKey == "" {
 		log.Fatal("SERVER_KEY missing")
 	}
@@ -66,9 +71,29 @@ func main() {
 		log.Fatal("PORT missing")
 	}
 
-	http.HandleFunc("/", Gora)
+	log.Println("Starting gora over SSL")
 	err := http.ListenAndServeTLS(fmt.Sprintf(":%s", Port), ServerCert, ServerKey, nil)
 	if err != nil {
 		log.Fatal("ListenAndServe: ", err)
+	}
+}
+
+func plainGora() {
+	log.Println("Starting gora over plain http connection")
+	err := http.ListenAndServe(fmt.Sprintf(":%s", Port), nil)
+	if err != nil {
+		log.Fatal("ListenAndServe: ", err)
+	}
+}
+
+func main() {
+
+	http.HandleFunc("/", Gora)
+
+	switch SSL {
+	case true:
+		sslGora()
+	default:
+		plainGora()
 	}
 }
