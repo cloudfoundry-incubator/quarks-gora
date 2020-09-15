@@ -13,7 +13,7 @@ RUN go build && \
 
 ################################################################################
 FROM $BASE_IMAGE
-LABEL org.opencontainers.image.source https://github.com/cfcontainerizationbot/quarks-gora
+LABEL org.opencontainers.image.source https://github.com/cloudfoundry-incubator/quarks-gora
 COPY --from=build /usr/local/bin/quarks-gora /usr/local/bin/quarks-gora
 
 ENTRYPOINT ["/usr/local/bin/quarks-gora"]
