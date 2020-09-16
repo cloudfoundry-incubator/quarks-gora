@@ -29,6 +29,7 @@ func Gora(w http.ResponseWriter, req *http.Request) {
 	case "GET":
 		log.Println("Handling GET request. Returning environment variables")
 		var env []byte
+		w.WriteHeader(http.StatusOK)
 		w.Header().Set("Content-Type", "text/plain")
 
 		for _, e := range os.Environ() {
@@ -53,6 +54,7 @@ func Gora(w http.ResponseWriter, req *http.Request) {
 		if out, err := cmd.CombinedOutput(); err != nil {
 			http.Error(w, fmt.Sprintf("500 - failed executing: %s\n error: %s", command, string(out)), http.StatusInternalServerError)
 		} else {
+			w.WriteHeader(http.StatusOK)
 			w.Write([]byte("OK"))
 		}
 	default:
