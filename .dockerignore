@@ -1,0 +1,9 @@
+examples/
+scripts/
+.github/
+.git/
+.gitignore
+.envrc
+LICENSE
+NOTICE
+README.md
